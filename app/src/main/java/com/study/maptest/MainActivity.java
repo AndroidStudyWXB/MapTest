@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         List<String> providerList = locationManager.getProviders(true);
-        if(providerList.contains(LocationManager.GPS_PROVIDER)) {
-            provider = LocationManager.GPS_PROVIDER;
-        } else if (providerList.contains(LocationManager.NETWORK_PROVIDER)) {
+        if(providerList.contains(LocationManager.NETWORK_PROVIDER)) {
             provider = LocationManager.NETWORK_PROVIDER;
+        } else if (providerList.contains(LocationManager.GPS_PROVIDER)) {
+            provider = LocationManager.GPS_PROVIDER;
         } else {
             Toast.makeText(this, "No location provider to use", Toast.LENGTH_LONG).show();
             return;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             navigateTo(location);
         } else {
             Toast.makeText(this, "Get location fail.", Toast.LENGTH_LONG).show();
-            
+
             LatLng ll = new LatLng(39.915,116.404);
             MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
             baiduMap.animateMapStatus(update);
