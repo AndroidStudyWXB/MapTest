@@ -50,12 +50,18 @@ public class MainActivity extends AppCompatActivity {
         if(location != null) {
             navigateTo(location);
         } else {
-
-            LatLng ll = new LatLng(33.33, 33.33);
+            Toast.makeText(this, "Get location fail.", Toast.LENGTH_LONG).show();
+            
+            LatLng ll = new LatLng(39.915,116.404);
             MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
             baiduMap.animateMapStatus(update);
 
-            Toast.makeText(this, "Get location fail.", Toast.LENGTH_LONG).show();
+            MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
+            locationBuilder.latitude(39.915);
+            locationBuilder.longitude(116.404);
+            MyLocationData locationData = locationBuilder.build();
+            baiduMap.setMyLocationData(locationData);
+
             locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
         }
     }
