@@ -39,8 +39,20 @@ public class MainActivity extends AppCompatActivity {
         List<String> providerList = locationManager.getProviders(true);
         if(providerList.contains(LocationManager.NETWORK_PROVIDER)) {
             provider = LocationManager.NETWORK_PROVIDER;
+
+            if(locationManager.isProviderEnabled(provider)) {
+                Toast.makeText(this, "NETWORK_PROVIDER is enable", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "NETWORK_PROVIDER in unable", Toast.LENGTH_LONG).show();
+            }
         } else if (providerList.contains(LocationManager.GPS_PROVIDER)) {
             provider = LocationManager.GPS_PROVIDER;
+
+            if(locationManager.isProviderEnabled(provider)) {
+                Toast.makeText(this, "GPS_PROVIDER is enable", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "GPS_PROVIDER in unable", Toast.LENGTH_LONG).show();
+            }
         } else {
             Toast.makeText(this, "No location provider to use", Toast.LENGTH_LONG).show();
             return;
