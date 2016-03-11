@@ -51,11 +51,9 @@ public class MainActivity extends AppCompatActivity {
             navigateTo(location);
         } else {
 
-            MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
-            locationBuilder.latitude(33.33f);
-            locationBuilder.longitude(33.33f);
-            MyLocationData locationData = locationBuilder.build();
-            baiduMap.setMyLocationData(locationData);
+            LatLng ll = new LatLng(33.33, 33.33);
+            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
+            baiduMap.animateMapStatus(update);
 
             Toast.makeText(this, "Get location fail.", Toast.LENGTH_LONG).show();
             locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
