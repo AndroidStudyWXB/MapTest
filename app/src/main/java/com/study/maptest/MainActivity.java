@@ -13,6 +13,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mapView = (MapView) findViewById(R.id.map_view);
         baiduMap = mapView.getMap();
+        baiduMap.setMyLocationEnabled(true);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         List<String> providerList = locationManager.getProviders(true);
@@ -48,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
         if(location != null) {
             navigateTo(location);
         } else {
+
+            MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
+            locationBuilder.latitude(33.33f);
+            locationBuilder.longitude(33.33f);
+            MyLocationData locationData = locationBuilder.build();
+            baiduMap.setMyLocationData(locationData);
+
             Toast.makeText(this, "Get location fail.", Toast.LENGTH_LONG).show();
             locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
         }
@@ -89,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        baiduMap.setMyLocationEnabled(false);
         mapView.onDestroy();
         if(locationManager != null) {
             locationManager.removeUpdates(locationListener);
