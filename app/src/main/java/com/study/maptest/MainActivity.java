@@ -1,9 +1,12 @@
 package com.study.maptest;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -13,7 +16,6 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 import java.util.List;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+
         mapView = (MapView) findViewById(R.id.map_view);
         baiduMap = mapView.getMap();
         baiduMap.setMyLocationEnabled(true);
@@ -60,22 +63,18 @@ public class MainActivity extends AppCompatActivity {
 
         Location location = locationManager.getLastKnownLocation(provider);
         if(location != null) {
+            Toast.makeText(this, "Get Location Success.", Toast.LENGTH_LONG).show();
             navigateTo(location);
-        } else {
-            Toast.makeText(this, "Get location fail.", Toast.LENGTH_LONG).show();
-
-            LatLng ll = new LatLng(39.915,116.404);
-            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
-            baiduMap.animateMapStatus(update);
-
-            MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
-            locationBuilder.latitude(39.915);
-            locationBuilder.longitude(116.404);
-            MyLocationData locationData = locationBuilder.build();
-            baiduMap.setMyLocationData(locationData);
-
-            locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
         }
+
+        // 权限检查，可不加，但会有红线提示
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+           ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+
+        locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
     }
 
     private void navigateTo(Location location) {
@@ -117,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
         baiduMap.setMyLocationEnabled(false);
         mapView.onDestroy();
         if(locationManager != null) {
+
+            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+               ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
             locationManager.removeUpdates(locationListener);
         }
     }
