@@ -16,6 +16,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 import java.util.List;
@@ -26,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private BaiduMap baiduMap;
     private LocationManager locationManager;
     private String provider;
-    private boolean isFirstLocate = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,15 +78,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateTo(Location location) {
-        if(isFirstLocate) {
-            LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
-            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
-            baiduMap.animateMapStatus(update);
-            update = MapStatusUpdateFactory.zoomTo(16f);
-            baiduMap.animateMapStatus(update);
+        LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
+        MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
+        baiduMap.animateMapStatus(update);
+        update = MapStatusUpdateFactory.zoomTo(17f);
+        baiduMap.animateMapStatus(update);
 
-            isFirstLocate = false;
-        }
+        // show me in the map
+        MyLocationData.Builder locationBuilder = new MyLocationData.Builder();
+        locationBuilder.latitude(location.getLatitude());
+        locationBuilder.longitude(location.getLongitude());
+        MyLocationData myLocationData = locationBuilder.build();
+        baiduMap.setMyLocationData(myLocationData);
     }
 
     LocationListener locationListener = new LocationListener() {
